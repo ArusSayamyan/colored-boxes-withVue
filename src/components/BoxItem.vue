@@ -7,17 +7,10 @@
 </template>
 
 <script setup>
-import {useStore} from "vuex";
-import {computed, defineProps} from "vue";
+import {defineProps} from "vue";
 
-const store = useStore();
 const props = defineProps(['items'])
-const listItems = computed(() => {
-  return store.getters.getLists
 
-})
-
-console.log(listItems)
 </script>
 
 <style scoped lang="scss">
@@ -32,7 +25,6 @@ console.log(listItems)
   &__box {
     width: 15px;
     height: 15px;
-    border: 1px solid #2c3e50;
   }
 }
 </style>

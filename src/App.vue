@@ -17,7 +17,8 @@
               </div>
               <div>
                 <span>{{ item.count }}</span>
-                <div class="mainContainer__coloredBox" :style="{backgroundColor: item.color}"></div>
+                <input type="color" :value="item.color" class="mainContainer__colorPicker">
+<!--                <div class="mainContainer__coloredBox" :style="{backgroundColor: }"></div>-->
               </div>
             </li>
           </ul>
@@ -87,13 +88,6 @@ function changeInputStatus(id) {
     }
   }
 
-  &__coloredBox {
-    width: 15px;
-    height: 15px;
-    display: inline-block;
-    margin-left: 10px;
-  }
-
   &__listItems {
     list-style: none;
   }
@@ -103,6 +97,14 @@ function changeInputStatus(id) {
     justify-content: space-between;
     align-items: center;
     padding: 5px 0;
+  }
+
+  &__colorPicker {
+    width: 25px;
+    height: 25px;
+    appearance: none;
+    background: none;
+    border: none;
   }
 }
 </style>

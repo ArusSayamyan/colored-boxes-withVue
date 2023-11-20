@@ -75,15 +75,13 @@ const store = createStore({
                if(payload === list.id) {
                    list.checked = !list.checked
                    list.items.forEach(item => {
-                       if(!item.checked) {
-                           item.checked = !item.checked
-                       }
+                           item.checked = list.checked
                    })
                }else {
                    list.items.forEach(item => {
                        if(item.id === payload) {
                            item.checked = !item.checked
-                           console.log(state)
+                           list.checked = false
                        }
                    })
                }
