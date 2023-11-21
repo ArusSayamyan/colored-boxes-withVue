@@ -15,10 +15,10 @@
                 <input type="checkbox" :checked="item.checked" @change="changeInputStatus(item.id)">
                 <span>{{ item.name }}</span>
               </div>
-              <div>
-                <span>{{ item.count }}</span>
-                <input type="color" :value="item.color" class="mainContainer__colorPicker">
-<!--                <div class="mainContainer__coloredBox" :style="{backgroundColor: }"></div>-->
+              <div class="mainContainer__props">
+                <input type="number" :value="item.count" class="mainContainer__count"
+                       @input="changeCountValue($event, item.id, 'count')">
+                <input type="color" :value="item.color" class="mainContainer__colorPicker" @input="changeCountValue($event, item.id, 'color')">
               </div>
             </li>
           </ul>
@@ -39,6 +39,7 @@ import ItemLists from "@/components/ItemLists.vue";
 
 const store = useStore();
 const isVisible = ref(false)
+// const countVal = ref()
 const lists = computed(() => {
   return store.getters.getLists
 
@@ -50,6 +51,19 @@ function makeListVisible() {
 
 function changeInputStatus(id) {
   store.commit('changeStatus', id)
+}
+
+function changeCountValue(event, id, changedInput) {
+  let changedValue = event.target.value;
+  if(changedInput === 'count') {
+    changedValue = +event.target.value
+  }
+  store.commit('changeBoxesCount', {
+    changedInputVal: changedValue,
+    id: id,
+    changedInput: changedInput
+  })
+  console.log(store.state)
 }
 </script>
 
@@ -105,6 +119,27 @@ function changeInputStatus(id) {
     appearance: none;
     background: none;
     border: none;
+  }
+
+  &__count {
+    width: 20px;
+    border: none;
+    outline: none;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__props {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media(max-width: 728px) {
+    flex-direction: column;
   }
 }
 </style>

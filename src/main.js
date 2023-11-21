@@ -89,6 +89,17 @@ const store = createStore({
 
        },
 
+        changeBoxesCount(state, payload) {
+            state.lists.forEach(list => {
+                list.items.forEach(item => {
+                    if(item.id === payload.id) {
+                        item[payload.changedInput] = payload.changedInputVal
+                    }
+                })
+            })
+        },
+
+
     },
     getters: {
         getLists(state) {

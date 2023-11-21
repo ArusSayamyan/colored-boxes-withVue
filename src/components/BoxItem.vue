@@ -19,6 +19,7 @@ const props = defineProps(['items'])
 
   &__boxesContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
   }
 
