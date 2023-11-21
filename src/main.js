@@ -12,6 +12,7 @@ const store = createStore({
                     id: 'list1',
                     checked: false,
                     listName: 'list 1',
+                    isVisible: false,
                     items: [
                         {
                             name: 'item 1',
@@ -66,6 +67,30 @@ const store = createStore({
                     ]
 
                 },
+                {
+                    id: 'list3',
+                    checked: false,
+                    listName: 'list 3',
+                    isVisible: false,
+                    items: [
+                        {
+                            name: 'item1',
+                            checked: false,
+                            color: '#1cea47',
+                            count: 3,
+                            id: 7
+                        },
+                        {
+                            name: 'item2',
+                            checked: false,
+                            color: '#d0355c',
+                            count: 9,
+                            id: 8
+                        },
+
+                    ]
+
+                },
             ],
         }
     },
@@ -98,6 +123,24 @@ const store = createStore({
                 })
             })
         },
+
+        deleteOneBox(state, payload) {
+            state.lists.forEach(list => {
+                list.items.forEach(item => {
+                    if(item.id === payload) {
+                        item.count--;
+                    }
+                })
+            })
+        },
+
+        showListItems(state, payload) {
+            state.lists.forEach(list => {
+                if(list.id === payload) {
+                    list.isVisible = !list.isVisible
+                }
+            })
+        }
 
 
     },

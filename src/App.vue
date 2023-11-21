@@ -2,18 +2,18 @@
   <div class="mainContainer">
     <div class="mainContainer__listWrapper">
       <div class="mainContainer__list" v-for="list of lists" :key="list.id"
-           :class="{'mainContainer__list--visible' : isVisible}">
+           :class="{'mainContainer__list--visible' : list.isVisible}">
         <div class="mainContainer__header">
-          <img src="@/assets/arrowDown.svg" alt="" @click="makeListVisible">
-          <input type="checkbox" :checked="list.checked" @change="changeInputStatus(list.id)">
-          <span> {{ list.listName }} </span>
+          <img src="@/assets/arrowDown.svg" alt="" @click="makeListVisible(list.id)">
+          <input type="checkbox" :checked="list.checked" :id="list.id" @change="changeInputStatus(list.id)">
+          <label :for="list.id"> {{ list.listName }} </label>
         </div>
         <div class="mainContainer__items">
           <ul class="mainContainer__listItems">
             <li class="mainContainer__listItem" v-for="item in list.items" :key="item.id">
               <div>
-                <input type="checkbox" :checked="item.checked" @change="changeInputStatus(item.id)">
-                <span>{{ item.name }}</span>
+                <input type="checkbox" :checked="item.checked" :id="item.id" @change="changeInputStatus(item.id)">
+                <label :for="item.id">{{ item.name }}</label>
               </div>
               <div class="mainContainer__props">
                 <input type="number" :value="item.count" class="mainContainer__count"
@@ -45,8 +45,8 @@ const lists = computed(() => {
 
 })
 
-function makeListVisible() {
-  isVisible.value = !isVisible.value;
+function makeListVisible(listId) {
+  store.commit('showListItems', listId)
 }
 
 function changeInputStatus(id) {
@@ -88,6 +88,7 @@ function changeCountValue(event, id, changedInput) {
     border: 1px solid #2c3e50;
     height: 400px;
     padding: 15px;
+    overflow: auto;
   }
 
   &__list {
