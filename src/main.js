@@ -1,6 +1,6 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
-import { createStore } from 'vuex'
+import {createStore} from 'vuex'
 
 
 //store
@@ -13,6 +13,7 @@ const store = createStore({
                     checked: false,
                     listName: 'list 1',
                     isVisible: false,
+                    randomBoxes: [],
                     items: [
                         {
                             name: 'item 1',
@@ -48,6 +49,7 @@ const store = createStore({
                     id: 'list2',
                     checked: false,
                     listName: 'list 2',
+                    randomBoxes: [],
                     items: [
                         {
                             name: 'item1',
@@ -72,6 +74,7 @@ const store = createStore({
                     checked: false,
                     listName: 'list 3',
                     isVisible: false,
+                    randomBoxes: [],
                     items: [
                         {
                             name: 'item1',
@@ -95,39 +98,51 @@ const store = createStore({
         }
     },
     mutations: {
-       changeStatus(state, payload) {
-           state.lists.forEach(list => {
-               if(payload === list.id) {
-                   list.checked = !list.checked
-                   list.items.forEach(item => {
-                           item.checked = list.checked
-                   })
-               }else {
-                   list.items.forEach(item => {
-                       if(item.id === payload) {
-                           item.checked = !item.checked
-                           list.checked = false
-                       }
-                   })
-               }
-           })
+        changeStatus(state, payload) {
+            state.lists.forEach(list => {
+                if (payload === list.id) {
+                    list.checked = !list.checked
+                    list.items.forEach(item => {
+                        item.checked = list.checked
+                    })
+                } else {
+                    list.items.forEach(item => {
+                        if (item.id === payload) {
+                            item.checked = !item.checked
+                            list.checked = false
+                        }
+                    })
+                }
+            })
 
-       },
+        },
 
         changeBoxesCount(state, payload) {
             state.lists.forEach(list => {
                 list.items.forEach(item => {
-                    if(item.id === payload.id) {
+                    if (item.id === payload.id) {
                         item[payload.changedInput] = payload.changedInputVal
                     }
                 })
             })
         },
 
+        changeRandomBoxesCount(state, payload) {
+            state.lists.forEach(list => {
+                list.randomBoxes.forEach(item => {
+                    if (item.id.charAt(0) == payload.id) {
+                        item[payload.changedInput] = payload.changedInputVal
+                    }
+                })
+            })
+        },
+
+
+
         deleteOneBox(state, payload) {
             state.lists.forEach(list => {
                 list.items.forEach(item => {
-                    if(item.id === payload) {
+                    if (item.id === payload) {
                         item.count--;
                     }
                 })
@@ -136,9 +151,32 @@ const store = createStore({
 
         showListItems(state, payload) {
             state.lists.forEach(list => {
-                if(list.id === payload) {
+                if (list.id === payload) {
                     list.isVisible = !list.isVisible
                 }
+            })
+        },
+
+        addRandomBoxes(state, payload) {
+            state.lists.forEach(list => {
+                if (list.id === payload.id) {
+                    list.randomBoxes = payload.data
+                }
+            })
+        },
+
+        deleteBoxFromRandom(state, payload) {
+            state.lists.forEach(list => {
+                list.items.forEach(item => {
+                    if (payload.deleteOneBox) {
+                        list.randomBoxes = list.randomBoxes.filter(box => box.id !== payload.id)
+                    } else if(payload.id === list.id && !list.checked) {
+                        list.randomBoxes = [];
+                    } else if(payload.id === item.id && !item.checked) {
+                        list.randomBoxes = list.randomBoxes.filter(box => +box.id.charAt(0) !== payload.id)
+                    }
+                })
+
             })
         }
 

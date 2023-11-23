@@ -1,20 +1,31 @@
 <template>
-    <div v-if="props.boxItem.checked" class="boxItem">
-      <div v-for="box in props.boxItem.count" :key="box" class="boxItem__box" :style="{backgroundColor: props.boxItem.color}" @click="deleteItemBox(props.boxItem.id)"></div>
-    </div>
+    <div v-for="box in props.boxItem.count" :key="box  + Math.random().toString(36).substr(2, 9)" :id="props.boxItem.id" class="boxItem__box"
+         :style="{backgroundColor: props.boxItem.color}" @click="!props.isRandom ? deleteItemBox(props.boxItem.id) : deleteFromRandom(props.boxItem.id)"></div>
 </template>
 
 <script setup>
 import {defineProps} from "vue";
 import {useStore} from "vuex";
-const store = useStore();
 
-const props = defineProps(['boxItem'])
+const store = useStore();
+const props = defineProps(['boxItem', 'isRandom'])
 
 function deleteItemBox(id) {
-  console.log(id)
   store.commit('deleteOneBox', id)
 }
+
+function deleteFromRandom(id) {
+  store.commit('deleteBoxFromRandom', {
+    id: id,
+    deleteOneBox: true
+  })
+
+  //UPDATE COUNT OF BOX ITEMS
+  store.commit('deleteOneBox', +id.charAt(0))
+}
+
+
+
 </script>
 
 <style scoped lang="scss">
@@ -28,6 +39,12 @@ function deleteItemBox(id) {
     width: 15px;
     height: 15px;
     cursor: pointer;
+  }
+
+  &__randomBoxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
   }
 }
 </style>

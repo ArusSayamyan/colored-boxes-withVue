@@ -4,21 +4,25 @@
       <div class="mainContainer__list" v-for="list of lists" :key="list.id"
            :class="{'mainContainer__list--visible' : list.isVisible}">
         <div class="mainContainer__header">
-          <img src="@/assets/arrowDown.svg" class="mainContainer__dropDownIcon" alt="" @click="makeListVisible(list.id)" :class="{'mainContainer__dropDownIcon--rotate' : list.isVisible}">
-          <input type="checkbox" :checked="list.checked" :id="list.id" @change="changeInputStatus(list.id)" class="mainContainer__checkbox">
+          <img src="@/assets/arrowDown.svg" class="mainContainer__dropDownIcon" alt="" @click="makeListVisible(list.id)"
+               :class="{'mainContainer__dropDownIcon--rotate' : list.isVisible}">
+          <input type="checkbox" :checked="list.checked" :id="list.id" @change="changeInputStatus(list.id)"
+                 class="mainContainer__checkbox">
           <label :for="list.id"> {{ list.listName }} </label>
         </div>
         <div class="mainContainer__items">
           <ul class="mainContainer__listItems">
             <li class="mainContainer__listItem" v-for="item in list.items" :key="item.id">
               <div class="mainContainer__listItemRow">
-                <input type="checkbox" :checked="item.checked" :id="item.id" @change="changeInputStatus(item.id)" class="mainContainer__checkbox">
+                <input type="checkbox" :checked="item.checked" :id="item.id" @change="changeInputStatus(item.id)"
+                       class="mainContainer__checkbox">
                 <label :for="item.id">{{ item.name }}</label>
               </div>
               <div class="mainContainer__props">
                 <input type="number" :value="item.count" class="mainContainer__count"
                        @input="changeCountValue($event, item.id, 'count')">
-                <input type="color" :value="item.color" class="mainContainer__colorPicker" @input="changeCountValue($event, item.id, 'color')">
+                <input type="color" :value="item.color" class="mainContainer__colorPicker"
+                       @change="changeCountValue($event, item.id, 'color')">
               </div>
             </li>
           </ul>
@@ -47,13 +51,43 @@ function makeListVisible(listId) {
   store.commit('showListItems', listId)
 }
 
+function updateRandomBoxes() {
+  for (let list of lists.value) {
+    const newArray = [];
+    for (let item of list.items) {
+      if (list.randomBoxes.length > 0) {
+        for (let i = 1; i <= item.count; i++) {
+          const copy = {...item}
+          copy.count = 1
+          copy.id = copy.id + Math.random().toString(36).substr(2, 9)
+          copy.checked =  true
+          let randomIndex = Math.floor(Math.random() * (newArray.length + 1));
+
+          // Insert the new item at the random index
+          newArray.splice(randomIndex, 0, copy);
+          store.commit('addRandomBoxes', {
+            id: list.id,
+            data: newArray
+          })
+        }
+      }
+    }
+  }
+
+}
+
 function changeInputStatus(id) {
+  updateRandomBoxes()
   store.commit('changeStatus', id)
+  store.commit('deleteBoxFromRandom', {
+    id: id,
+    deleteOneBox: false
+  })
 }
 
 function changeCountValue(event, id, changedInput) {
   let changedValue = event.target.value;
-  if(changedInput === 'count') {
+  if (changedInput === 'count') {
     changedValue = +event.target.value
   }
   store.commit('changeBoxesCount', {
@@ -61,7 +95,10 @@ function changeCountValue(event, id, changedInput) {
     id: id,
     changedInput: changedInput
   })
+
+  updateRandomBoxes();
 }
+
 </script>
 
 
@@ -206,24 +243,4 @@ function changeCountValue(event, id, changedInput) {
     flex-direction: column;
   }
 }
-
-//.mainContainer__listItem
-//
-//
-//.mainContainer__listItem
-
-//.mainContainer__listItem label:before {
-//  content: '';
-//  -webkit-appearance: none;
-//  background-color: transparent;
-//  border: 2px solid #9ea5a9;
-//  padding: 8px;
-//  display: inline-block;
-//  position: relative;
-//  vertical-align: middle;
-//  cursor: pointer;
-//  margin-right: 5px;
-//}
-
-
 </style>

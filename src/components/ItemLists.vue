@@ -1,30 +1,81 @@
 <template>
-<div class="itemList" v-for="list in lists" :key="list.id">
-  <p class="itemList__title">
-    <span>{{ list.listName }}</span>
-    <button class="itemList__randomBtn" @click="makeRandom(list.items)">Перемешать</button>
-  </p>
-    <BoxItem v-for="item in list.items"
-             :key="item.id"
-             :boxItem="item"
-    />
-</div>
+  <div class="itemList" v-for="list in lists" :key="list.id">
+    <p class="itemList__title">
+      <span>{{ list.listName }}</span>
+      <button class="itemList__randomBtn" @click="makeRandom(list.items, list.id)" v-if="!list.randomBoxes.length > 0">
+        Перемешать
+      </button>
+      <button class="itemList__randomBtn" @click="sortBoxes(list.items, list.id)" v-else>Сортировать</button>
+    </p>
+    <div class="boxItem" v-if="!list.randomBoxes.length > 0">
+      <div v-for="item in list.items" class="itemList__row"
+           :key="item.id">
+        <BoxItem
+            v-if="item.checked"
+            :boxItem="item"
+            :is-random="isRandom"
+        />
+      </div>
+    </div>
+    <div v-else class="itemList__randomElems">
+      <div v-for="item in list.randomBoxes" class="itemList__boxElement"
+           :key="item.id + generatedUniqueId">
+        <BoxItem
+            v-if="item.checked"
+            :boxItem="item"
+            :is-random="isRandom"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import {useStore} from "vuex";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import BoxItem from "@/components/BoxItem.vue";
 
+const generatedUniqueId = Math.random().toString(36).substr(2, 9)
+const isRandom = ref(false)
 const store = useStore();
+
 const lists = computed(() => {
   return store.getters.getLists
-
 })
 
-function makeRandom(data) {
-  console.log(data)
+function makeRandom(data, id) {
+  let randomBoxes = [];
+
+  for (let obj of data) {
+    for (let i = 1; i <= obj.count; i++) {
+      if (obj.checked) {
+        const copy = {...obj}
+        copy.count = 1;
+        copy.id = obj.id + Math.random().toString(36).substr(2, 9)
+        randomBoxes.push(copy)
+      }
+    }
+  }
+  for (let i = randomBoxes.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomBoxes[i], randomBoxes[j]] = [randomBoxes[j], randomBoxes[i]];
+  }
+  store.commit('addRandomBoxes', {
+    id: id,
+    data: randomBoxes
+  })
+  isRandom.value = !isRandom.value
 }
+
+function sortBoxes(data, id) {
+  const delRandomBoxes = []
+  store.commit('addRandomBoxes', {
+    id: id,
+    data: delRandomBoxes
+  })
+}
+
+
 </script>
 
 <style scoped lang="scss">
@@ -48,6 +99,20 @@ function makeRandom(data) {
     margin-top: 15px;
   }
 
+  &__row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding-bottom: 5px;
+  }
+
+  &__randomElems {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 10px;
+    gap: 5px;
+  }
+
   &__randomBtn {
     background-color: #26a641;
     padding: 5px;
@@ -62,5 +127,8 @@ function makeRandom(data) {
       color: #26a641;
     }
   }
+}
+.boxItem {
+  padding-top: 10px;
 }
 </style>
