@@ -19,7 +19,7 @@
     </div>
     <div v-else class="itemList__randomElems">
       <div v-for="item in list.randomBoxes" class="itemList__boxElement"
-           :key="item.id + generatedUniqueId">
+           :key="item.id + Math.random().toString(36).substr(2, 9)">
         <BoxItem
             v-if="item.checked"
             :boxItem="item"
@@ -35,7 +35,6 @@ import {useStore} from "vuex";
 import {computed, ref} from "vue";
 import BoxItem from "@/components/BoxItem.vue";
 
-const generatedUniqueId = Math.random().toString(36).substr(2, 9)
 const isRandom = ref(false)
 const store = useStore();
 

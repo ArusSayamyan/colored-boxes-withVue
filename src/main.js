@@ -13,6 +13,7 @@ const store = createStore({
                     checked: false,
                     listName: 'list 1',
                     isVisible: false,
+                    elementAdded: false,
                     randomBoxes: [],
                     items: [
                         {
@@ -49,6 +50,8 @@ const store = createStore({
                     id: 'list2',
                     checked: false,
                     listName: 'list 2',
+                    isVisible: false,
+                    elementAdded: false,
                     randomBoxes: [],
                     items: [
                         {
@@ -74,6 +77,7 @@ const store = createStore({
                     checked: false,
                     listName: 'list 3',
                     isVisible: false,
+                    elementAdded: false,
                     randomBoxes: [],
                     items: [
                         {
@@ -130,7 +134,7 @@ const store = createStore({
         changeRandomBoxesCount(state, payload) {
             state.lists.forEach(list => {
                 list.randomBoxes.forEach(item => {
-                    if (item.id.charAt(0) == payload.id) {
+                    if (item.id.charAt(0) === payload.id) {
                         item[payload.changedInput] = payload.changedInputVal
                     }
                 })
