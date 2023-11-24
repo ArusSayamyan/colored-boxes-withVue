@@ -7,7 +7,7 @@
       </button>
       <button class="itemList__randomBtn" @click="sortBoxes(list.items, list.id)" v-else>Сортировать</button>
     </p>
-    <div class="boxItem" v-if="list.randomBoxes.length === 0">
+    <div class="boxItem" v-if="!list.randomBoxes.length > 0">
       <div v-for="item in list.items" class="itemList__row"
            :key="item.id">
         <BoxItem
@@ -44,7 +44,6 @@ const lists = computed(() => {
 
 function makeRandom(data, id) {
   let randomBoxes = [];
-  console.log(data)
   for (let obj of data) {
     for (let i = 1; i <= obj.count; i++) {
       if (obj.checked) {

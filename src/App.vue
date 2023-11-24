@@ -20,9 +20,9 @@
               </div>
               <div class="mainContainer__props">
                 <input type="number" :value="item.count" class="mainContainer__count"
-                       @input="changeCountValue($event, item.id, 'count')">
+                       @input="changeInputValues($event, item.id, 'count')">
                 <input type="color" :value="item.color" class="mainContainer__colorPicker"
-                       @change="changeCountValue($event, item.id, 'color')">
+                       @change="changeInputValues($event, item.id, 'color')">
               </div>
             </li>
           </ul>
@@ -85,15 +85,15 @@ function changeInputStatus(id) {
 
 }
 
-function changeCountValue(event, id, changedInput) {
+function changeInputValues(event, id, changedInputName) {
   let changedValue = event.target.value;
-  if (changedInput === 'count') {
+  if (changedInputName === 'count') {
     changedValue = +event.target.value
   }
   store.commit('changeBoxesCount', {
     changedInputVal: changedValue,
     id: id,
-    changedInput: changedInput
+    changedInput: changedInputName
   })
   updateRandomBoxes();
 }
