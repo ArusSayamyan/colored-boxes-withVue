@@ -1,6 +1,8 @@
 <template>
-    <div v-for="box in props.boxItem.count" :key="box  + Math.random().toString(36).substr(2, 9)" :id="props.boxItem.id" class="boxItem__box"
-         :style="{backgroundColor: props.boxItem.color}" @click="!props.isRandom ? deleteItemBox(props.boxItem.id) : deleteFromRandom(props.boxItem.id)"></div>
+  <div v-for="box in props.boxItem.count" :key="box  + Math.random().toString(36).substr(2, 9)" :id="props.boxItem.id"
+       class="boxItem__box"
+       :style="{backgroundColor: props.boxItem.color}"
+       @click="!props.isRandom ? deleteItemBox(props.boxItem.id) : deleteFromRandom(props.boxItem.id)"></div>
 </template>
 
 <script setup>
@@ -23,7 +25,6 @@ function deleteFromRandom(id) {
   //UPDATE COUNT OF BOX ITEMS
   store.commit('deleteOneBox', +id.charAt(0))
 }
-
 
 
 </script>

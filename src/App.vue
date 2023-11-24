@@ -55,7 +55,7 @@ function updateRandomBoxes() {
   for (let list of lists.value) {
     const newArray = [];
     for (let item of list.items) {
-      if (list.randomBoxes.length > 0) {
+      if (list.randomBoxes.length > 0 && item.checked) {
         for (let i = 1; i <= item.count; i++) {
           const copy = {...item}
           copy.count = 1
@@ -73,16 +73,16 @@ function updateRandomBoxes() {
       }
     }
   }
-
 }
 
 function changeInputStatus(id) {
-  updateRandomBoxes()
   store.commit('changeStatus', id)
   store.commit('deleteBoxFromRandom', {
     id: id,
     deleteOneBox: false
   })
+  updateRandomBoxes()
+
 }
 
 function changeCountValue(event, id, changedInput) {
@@ -95,7 +95,6 @@ function changeCountValue(event, id, changedInput) {
     id: id,
     changedInput: changedInput
   })
-
   updateRandomBoxes();
 }
 
