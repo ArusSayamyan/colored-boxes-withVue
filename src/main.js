@@ -131,18 +131,6 @@ const store = createStore({
             })
         },
 
-        changeRandomBoxesCount(state, payload) {
-            state.lists.forEach(list => {
-                list.randomBoxes.forEach(item => {
-                    if (item.id.charAt(0) === payload.id) {
-                        item[payload.changedInput] = payload.changedInputVal
-                    }
-                })
-            })
-        },
-
-
-
         deleteOneBox(state, payload) {
             state.lists.forEach(list => {
                 list.items.forEach(item => {
